@@ -14,13 +14,13 @@ class PickARecord::Selector < Module
   # @!attribute [rw] source_scope
   #   The source to draw a random record from.
   #   @return [Proc, Symbol]
-  calculi_procable  :source_scope
+  attr_accessor :source_scope
 
   calculi_computed :full_name do
     [prefix, name].compact.join('_').to_sym
   end
 
-  options! :name, prefix: 'random', store_last: 5, duration: 1.day
+  options! :name, prefix: 'random', store_last: 5, duration: 1.day, source_scope: :scoped
 
   # @!group Duration attributes
 
@@ -41,6 +41,14 @@ class PickARecord::Selector < Module
   # @!endgroup
 
   calculi_functions do
+    function :meta_module do
+      name { "meta_module_for_#{full_name}" }
+
+      body do |target, fn, args|
+        target
+      end
+    end
+
     function :cache_key do
       name { "#{full_name}_cache_key" }
 
