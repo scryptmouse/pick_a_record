@@ -1,0 +1,2 @@
+module PickARecord::Utility
+end
